@@ -20,7 +20,7 @@ class LinkedList{
         }
         this.#head = novoNo;
         this.#qtd++;
-        return true;
+    return true;
     }
 
     addLast(novoDado){
@@ -34,8 +34,24 @@ class LinkedList{
         }
         this.#tail = novoNo;
         this.#qtd++;
-        return true;
+    return true;
     }
+
+     addAtIndex(index, novoDado){
+        const novoNo = new No(novoDado);
+        let aux = this.#head;
+        let pos = 0;
+        while(pos < index - 1){
+            aux = aux.proximo;
+            pos++;
+        }
+        novoNo.anterior = aux;
+        novoNo.proximo = aux.proximo;
+        aux.proximo = novoNo;
+        novoNo.proximo.anterior = novoNo;
+        this.#qtd++;
+    return true;
+    } 
 
     removeFirst(){
         const dadoRemovido = this.#head.dado;
@@ -45,7 +61,7 @@ class LinkedList{
         else
             this.#tail = null;
         this.#qtd--;
-        return dadoRemovido;
+    return dadoRemovido;
     }
 
     removeLast(){
@@ -56,9 +72,24 @@ class LinkedList{
         else
             this.#head = null;
         this.#qtd--;
-        return dadoRemovido;
+    return dadoRemovido;
     }
     
+    
+     removeAtIndex(index) {
+        let atual = this.#head;
+        let pos = 0;
+        while (pos < index) {
+            atual = atual.proximo;
+            pos++;
+        }
+        const anterior = atual.anterior;
+        const proximo = atual.proximo;
+        anterior.proximo = proximo;
+        proximo.anterior = anterior;
+        this.#qtd--;
+    return atual.dado;
+    } 
     getLast(){
       return this.#tail.dado;
     }

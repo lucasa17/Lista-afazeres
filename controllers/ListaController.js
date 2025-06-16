@@ -4,7 +4,7 @@ const minhaLista = new LinkedList();
 function limpaInputs() {
     document.getElementById("txtnovaTarefa").value = "";
     document.getElementById("txtnovaPrioridade").value = "";
-    document.getElementById("txtIndice").value = "";
+    //document.getElementById("txtIndice").value = "";
     document.getElementById("txtnovaTarefa").focus();
 }
 //--------------------------------------------------------------------------------------------
@@ -35,7 +35,14 @@ function leiaDadosTarefa() {
   }
   //--------------------------------------------------------------------------------------------
   function adicionarIndice() {
-    //implemente
+    const novaTarefa = leiaDadosTarefa();
+    const indice = document.getElementById("txtIndice").value.trim();
+    if(novaTarefa!=null){
+      minhaLista.addAtIndex(indice, novaTarefa);
+      console.log(minhaLista.toString());
+      limpaInputs();
+      atualizarLista();
+    }  
   }
 //--------------------------------------------------------------------------------------------
  // Função para remover o primeiro elemento da lista
@@ -52,7 +59,7 @@ function leiaDadosTarefa() {
  }
  //--------------------------------------------------------------------------------------------
  // Função para remover o ultimo elemento da lista
- function removerElementoFinal() {
+/* function removerElementoFinal() {
     if(!minhaLista.isEmpty()){
       const tarefaRealizada = minhaLista.removeLast();
       mostrarMensagemRemocao(tarefaRealizada);
@@ -62,17 +69,62 @@ function leiaDadosTarefa() {
       alert("Lista de Tarefas Vazia");
     }
 }
+*/
+
+function removerTarefaPorIndice(index) {
+  if (!minhaLista.isEmpty()) {
+    let tarefaRemovida = null;
+    if(index === 0){
+      tarefaRemovida  = minhaLista.removeFirst();
+    }
+    else if(index === minhaLista.length - 1){
+      tarefaRemovida = minhaLista.removeLast();
+    } 
+    else{
+      tarefaRemovida = minhaLista.removeAtIndex(index);
+    }
+    const agora = obterHoraAtual();
+    const hoje = obterDataAtual();
+    const segundos = calcularDiferencaHoras(agora, tarefaRemovida.hora);
+    const dias = calcularDiferencaDias(tarefaRemovida.data, hoje);
+
+    mostrarMensagemRemocao(tarefaRemovida, segundos, dias);
+    atualizarLista();
+  } else {
+    alert("Lista de Tarefas Vazia");
+  }
+}
 
 //--------------------------------------------------------------------------------------------
 function mostrarMensagemRemocao(tarefaRealizada) {
     const mensagem = document.getElementById("mensagem-remocao");
-    mensagem.innerHTML ="Tarefa realizada: "+ tarefaRealizada.descricao;
+    mensagem.innerHTML = "Tarefa realizada: " +tarefaRealizada;
     mensagem.style.display = "block";
   }
 //-------------------------------------------------------------------------------------------- 
+
+function mostrarTarefaAntiga(){
+  let tarefaAntiga = null;
+  if(!minhaLista.isEmpty()){
+    for (const tarefa of minhaLista) {
+      if (tarefaAntiga === null) {
+        tarefaAntiga = tarefa;
+      } else {
+        tarefaAntiga = comparaTarefasDataHora(tarefaAntiga, tarefa);
+      }
+    }
+    const mensagem = document.getElementById("mensagem-remocao");
+    mensagem.innerHTML = "Tarefa mais antiga: " +tarefaAntiga;
+    mensagem.style.display = "block";}
+    else{
+      alert("Lista de Tarefas Vazia");
+    }
+
+}
+
 // Função para atualizar a exibição da fila
- function atualizarLista() {
-   const listaTarefas = 
+function atualizarLista() {
+    const listaTarefas = 
        document.getElementById("list_listadeTarefas");
    const lblTarefas = 
           document.getElementById("lblmostraTarefas");
@@ -90,6 +142,36 @@ function mostrarMensagemRemocao(tarefaRealizada) {
       }
       
  }
+ 
+ function inserirPrioridade() {
+    const novaTarefa = leiaDadosTarefa();
+    if (novaTarefa != null){
+    const novaPrioridade = document.getElementById("txtnovaPrioridade").value.trim();
+      if(minhaLista.isEmpty() ){
+         minhaLista.addFirst(novaTarefa);
+      }
+     else if(novaPrioridade < minhaLista.getFirst().prioridade ){
+       minhaLista.addFirst(novaTarefa);
+    }
+    else if(novaPrioridade >= minhaLista.getLast().prioridade){
+       minhaLista.addLast(novaTarefa);
+    } else{ 
+
+    let index = 0;
+    for (const tarefa of minhaLista) {
+        const prioridadeAtual = tarefa.prioridade;
+        if (novaPrioridade < prioridadeAtual) {
+            break;
+        }
+        index++;
+    }
+    minhaLista.addAtIndex(index, novaTarefa); 
+     }
+    console.log(minhaLista.toString());
+    limpaInputs();
+    atualizarLista();
+  }
+}
  //--------------------------------------------------------------------------------------------
   //FUNÇÕES COMPLEMENTARES PARA A APLICAÇÃO
  //-----------------------------------------
