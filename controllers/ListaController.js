@@ -72,6 +72,7 @@ function leiaDadosTarefa() {
 */
 
 function removerTarefaPorIndice(index) {
+  alert("Tarefa removida");
   if (!minhaLista.isEmpty()) {
     let tarefaRemovida = null;
     if(index === 0){
@@ -87,8 +88,6 @@ function removerTarefaPorIndice(index) {
     const hoje = obterDataAtual();
     const segundos = calcularDiferencaHoras(agora, tarefaRemovida.hora);
     const dias = calcularDiferencaDias(tarefaRemovida.data, hoje);
-
-    mostrarMensagemRemocao(tarefaRemovida, segundos, dias);
     atualizarLista();
   } else {
     alert("Lista de Tarefas Vazia");
@@ -98,7 +97,9 @@ function removerTarefaPorIndice(index) {
 //--------------------------------------------------------------------------------------------
 function mostrarMensagemRemocao(tarefaRealizada) {
     const mensagem = document.getElementById("mensagem-remocao");
-    mensagem.innerHTML = "Tarefa realizada: " +tarefaRealizada;
+    mensagem.innerHTML = "Tarefa realizada: " +tarefaRealizada+ 
+    " | Tempo gasto: " + calcularDiferencaHoras(tarefaRealizada.hora, obterHoraAtual()) + 
+    " - Dias desde a criação: " + calcularDiferencaDias(tarefaRealizada.data, obterDataAtual());
     mensagem.style.display = "block";
   }
 //-------------------------------------------------------------------------------------------- 
@@ -124,7 +125,7 @@ function mostrarTarefaAntiga(){
 
 // Função para atualizar a exibição da fila
 function atualizarLista() {
-    const listaTarefas = 
+   const listaTarefas = 
        document.getElementById("list_listadeTarefas");
    const lblTarefas = 
           document.getElementById("lblmostraTarefas");
@@ -132,9 +133,18 @@ function atualizarLista() {
    if(!minhaLista.isEmpty()){
       lblTarefas.innerHTML = "Lista de Tarefas";
       for(const tarefa of minhaLista){
+          const buttom = document.createElement("button");
+          const div = document.createElement("div");
+          buttom.innerHTML = "Remover";
+          buttom.className = "btn btn-danger";
+          buttom.onclick = function() {
+            removerTarefaPorIndice(minhaLista.getIndexOf(tarefa));
+          }
           const novaLinha = document.createElement("li");
           novaLinha.innerHTML = tarefa.toString();
-          listaTarefas.appendChild(novaLinha);
+          div.append(novaLinha);
+          div.append(buttom);
+          listaTarefas.appendChild(div);
       }
    }
    else{
