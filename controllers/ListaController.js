@@ -72,10 +72,9 @@ function leiaDadosTarefa() {
 */
 
 function removerTarefaPorIndice(index) {
-  alert("Tarefa removida");
   if (!minhaLista.isEmpty()) {
     let tarefaRemovida = null;
-    if(index === 0){
+    if(index == 0){
       tarefaRemovida  = minhaLista.removeFirst();
     }
     else if(index === minhaLista.length - 1){
@@ -92,6 +91,7 @@ function removerTarefaPorIndice(index) {
   } else {
     alert("Lista de Tarefas Vazia");
   }
+  alert("Tarefa removida");
 }
 
 //--------------------------------------------------------------------------------------------
